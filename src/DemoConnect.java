@@ -15,6 +15,7 @@ public class DemoConnect {
             while (resultSet.next()) {
                 System.out.println(resultSet.getInt(1) + " " + resultSet.getString(2) + " " + resultSet.getString(3));
             }
+            System.out.println("finish");
             connection.close();
         } catch (Exception e) {
             System.out.println(e);
