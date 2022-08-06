@@ -4,7 +4,7 @@ public class UserInputDemo {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
-        System.out.println("Enter first number- ");
+        System.out.println("----------------------------------------------------- \nhello");
         int a = sc.nextInt();
         if (a < 3) {
             System.out.println("Number can not smaller than 3, You enter: " + a + ", Please rerun function again to correct it");

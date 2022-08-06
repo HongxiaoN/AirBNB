@@ -1,4 +1,4 @@
 package InformationToRecord;
 
-public class temp {
+public class renterHistory {
 }
