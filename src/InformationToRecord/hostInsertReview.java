@@ -24,7 +24,7 @@ public class hostInsertReview {
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Please type your comments within 100 words: ");
-        String comment = sc.nextLine();
+        String comment = sc.nextLine().toLowerCase();
 
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";

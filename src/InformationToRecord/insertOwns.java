@@ -9,7 +9,7 @@ public class insertOwns {
     public static void main(String[] args) {
 
         System.out.println("-----------------------------------------------------");
-        System.out.println("Welcome to AirBNB!\nThis function is for adding a new ownership between listing and host on the system.");
+        System.out.println("Welcome to AirBNB!\nThis function is for making a new reservation for a specific time range on the system.");
         System.out.println("-----------------------------------------------------\n");
 
         System.out.println("Please enter the SIN number of the host: ");

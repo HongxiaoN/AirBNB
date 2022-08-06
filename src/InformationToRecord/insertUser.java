@@ -16,11 +16,11 @@ public class insertUser {
         int sin = scInt.nextInt();
         System.out.println("Please enter your name: ");
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
-        String username = sc.nextLine();
+        String username = sc.nextLine().toLowerCase();
         System.out.println("Please enter your email: ");
-        String email = sc.nextLine();
+        String email = sc.nextLine().toLowerCase();
         System.out.println("Please enter your default address: ");
-        String address = sc.nextLine();
+        String address = sc.nextLine().toLowerCase();
         System.out.println("Please enter your date of birth in the form of YYMMDD such as Aug 8th 2022 -> 20220808: ");
         int birthday = scInt.nextInt();
         if (birthday > 20040101){
@@ -29,7 +29,7 @@ public class insertUser {
         }
 
         System.out.println("Please enter your occupation: ");
-        String occupation = sc.nextLine();
+        String occupation = sc.nextLine().toLowerCase();
         System.out.println("Please enter your card number: ");
         int card = scInt.nextInt();
 
