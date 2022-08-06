@@ -13,7 +13,7 @@ public class DemoConnect {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("select * from student");
             while (resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + " " + resultSet.getString(2) + " " + resultSet.getString(3));
+                System.out.println(resultSet.getInt(1) + " " + resultSet.getString(3) + " " + resultSet.getString(2));
             }
             System.out.println("finish");
             connection.close();
