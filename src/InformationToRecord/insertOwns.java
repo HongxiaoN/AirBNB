@@ -1,32 +1,29 @@
 package InformationToRecord;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class insertChangePrice {
+public class insertOwns {
     public static void main(String[] args) {
+
         System.out.println("-----------------------------------------------------");
-        System.out.println("Welcome to AirBNB!\nThis function is for changing the price of a listing for a specific time period on the system.");
+        System.out.println("Welcome to AirBNB!\nThis function is for adding a new ownership between listing and host on the system.");
         System.out.println("-----------------------------------------------------\n");
 
-        System.out.println("Please enter the listing ID: ");
+        System.out.println("Please enter the SIN number of the host: ");
         Scanner scInt = new Scanner(System.in);
+        int hostid = scInt.nextInt();
+        System.out.println("Please enter the listing ID: ");
         int lid = scInt.nextInt();
-        System.out.println("Please enter the start date: ");
-        int start_date = scInt.nextInt();
-        System.out.println("Please enter the end date: ");
-        int end_date = scInt.nextInt();
-        System.out.println("Please enter the price: ");
-        int price = scInt.nextInt();
-//
+
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
-            st.executeUpdate("INSERT INTO changeprice " +
-                    "VALUES ('"+lid+"','"+start_date+"', '"+end_date+"', '"+price+"')");
+            st.executeUpdate("INSERT INTO owns " +
+                    "VALUES ('"+hostid+"','"+lid+"')");
 
             conn.close();
         } catch (Exception e) {
@@ -34,5 +31,7 @@ public class insertChangePrice {
             System.err.println(e.getMessage());
         }
 
+
     }
+
 }

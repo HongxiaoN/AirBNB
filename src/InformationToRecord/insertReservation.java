@@ -1,7 +1,7 @@
 package InformationToRecord;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
@@ -13,22 +13,22 @@ public class insertReservation {
 
         System.out.println("Please enter the SIN number of the host: ");
         Scanner scInt = new Scanner(System.in);
-        int hostid = scInt.nextInt();
+        int hostid1 = scInt.nextInt();
         System.out.println("Please enter your SIN number: ");
-        int renterid = scInt.nextInt();
+        int renterid1 = scInt.nextInt();
         System.out.println("Please enter the listing ID that you would like to proceed: ");
-        int lid = scInt.nextInt();
+        int lid1 = scInt.nextInt();
         System.out.println("Please enter the start date: ");
-        int start_date = scInt.nextInt();
+        int start_date1 = scInt.nextInt();
 
-        if (start_date < 20220101){
+        if (start_date1 < 20220101){
             System.out.println("Cannot make reservation that has already passed!");
             return;
         }
 
         System.out.println("Please enter the end date: ");
-        int end_date = scInt.nextInt();
-        if (end_date < 20220101 || start_date >= end_date){
+        int end_date1 = scInt.nextInt();
+        if (end_date1 < 20220101 || start_date1 >= end_date1){
             System.out.println("Such end date is invalid!");
             return;
         }
@@ -38,18 +38,26 @@ public class insertReservation {
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
 
-            
+            ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '"+lid1+"' AND uid= '"+hostid1+"'");
+            if (isHost.next() == false){
+                System.out.println("The host listing combination you entered is invalid!");
+                return;
+            }
 
+            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '"+renterid1+"'");
+            if (isUser.next() == false){
+                System.out.println("You need to sign up for an account in order to proceed");
+                return;
+            }
 
+            ResultSet isConflict = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"+renterid1+"' AND (('"+start_date1+"' < end_date AND '"+start_date1+"' >= start_date) OR ('"+end_date1+"' <= end_date AND '"+end_date1+"' > start_date)) AND status = 0");
+            if (isConflict.next() == true){
+                System.out.println("There is a conflict with your current reservation!");
+                return;
+            }
 
-
-
-
-
-
-
-            st.executeUpdate("INSERT INTO reservation " +
-                    "VALUES ('"+sin+"','"+username+"', '"+email+"', '"+address+"','"+birthday+"', '"+occupation+"','"+card+"')");
+            st.executeUpdate("INSERT INTO reservations " +
+                    "VALUES ('"+hostid1+"','"+renterid1+"', '"+lid1+"', '"+start_date1+"','"+end_date1+"', 0, 3, NULL, 3, NULL)");
 
             conn.close();
         } catch (Exception e) {
