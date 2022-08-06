@@ -11,7 +11,7 @@ public class hostAllReservations {
     public static void main(String[] args) {
 
         System.out.println("-----------------------------------------------------");
-        System.out.println("Welcome to AirBNB!\nThis function is for showing complete history and future bookings made by you on the system.");
+        System.out.println("Welcome to AirBNB!\nThis function is for showing complete history and future bookings with your listings on the system.");
         System.out.println("-----------------------------------------------------\n");
 
         System.out.println("Please enter your SIN number: ");
