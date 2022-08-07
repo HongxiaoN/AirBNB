@@ -18,7 +18,7 @@ public class totalListingsRankHost {
             Connection conn = DriverManager.getConnection(url, "root", "");
             Statement st = conn.createStatement();
 
-            System.out.println("Do you want to rank by country only (A) or by country and city (B) Please enter your input from A or B");
+            System.out.println("Do you want to rank in descending order by country only (A) or by country and city (B) Please enter your input from A or B");
             System.out.println("Please note that nothing will be displayed if there is no bookings within the time range you entered");
 
             Scanner scChar = new Scanner(System.in);
