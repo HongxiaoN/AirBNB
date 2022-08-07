@@ -47,7 +47,8 @@ public class deleteListing {
                 return;
             }
 
-            int updateReservations = statement.executeUpdate("UPDATE reservations SET status = 0, cancelled_by = hostid WHERE lid='" + lid + "' AND status = 1");
+            int updateReservations = statement.executeUpdate("UPDATE reservations SET status = 0, cancelled_by = hostid WHERE lid='"
+                    + lid + "' AND start_date >=20220101 AND end_date>=20220101 AND status = 1");
 
             System.out.println("Successful cancel " + updateReservations + " reservations that book your house.");
 

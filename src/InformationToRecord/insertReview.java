@@ -1,4 +1,4 @@
-package OperationsToSupport;
+package InformationToRecord;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,11 +6,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class deleteReservation {
+public class insertReview {
     public static void main(String[] args) {
 
         System.out.println("-----------------------------------------------------");
-        System.out.println("Welcome to AirBNB!\nThis function is for deleting an existing reservation on the system.");
+        System.out.println("Welcome to AirBNB!\nThis function is for adding comments and reviews on the system by host.");
         System.out.println("-----------------------------------------------------\n");
 
         try {
@@ -19,7 +19,6 @@ public class deleteReservation {
             Statement st = conn.createStatement();
 
             Scanner scInt = new Scanner(System.in);
-
             System.out.println("Please enter host ID: ");
             int hostid = scInt.nextInt();
             // Check host is in users
@@ -56,15 +55,15 @@ public class deleteReservation {
                 return;
             }
 
-            System.out.println("TODAY is 2022JAN01. You can only cancel for future reservation. Please enter start time for this reservation: ");
+            System.out.println("You can only write review for past reservation. Please enter start time for this reservation: ");
             int starttime = scInt.nextInt();
-            if(starttime < 20220101){
-                System.out.println("You can only cancel for future reservation.");
+            if(starttime > 20220101){
+                System.out.println("You can only write review for past reservation.");
             }
-            System.out.println("You can only cancel for future reservation. Please enter end time for this reservation: ");
+            System.out.println("You can only write review for past reservation. Please enter end time for this reservation: ");
             int endtime = scInt.nextInt();
-            if(endtime < 20220101){
-                System.out.println("You can only cancel for future reservation.");
+            if(endtime > 20220101){
+                System.out.println("You can only write review for past reservation.");
             }
 
             // Check reservation is in reservations table
@@ -75,16 +74,43 @@ public class deleteReservation {
                 System.out.println("ERROR: This reservation is not exist. Please check again!");
                 return;
             }
-            int isupdate = st.executeUpdate("UPDATE reservations SET status=0, cancelled_by='" + userid
-                    + "' WHERE hostid='" + hostid +"' AND renterid='" + renterid + "' AND lid='"
-                    + lid + "' AND start_date='" + starttime + "' AND end_date='" + endtime + "' AND status=1");
-            if (isupdate != 1) {
-                System.out.println("Failed to delete reservation.");
-            }
-            else {
-                System.out.println("Successfully to delete reservation. Your user id is " + userid);
+
+            System.out.println("Please enter a rating between 1-5: ");
+            int rate = scInt.nextInt();
+            if (rate < 1 || rate > 5){
+                System.out.println("Invalid rating, should be an integer between 1 to 5!");
             }
 
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Please type your comments within 100 words: ");
+            String comment = sc.nextLine();
+            if (comment.length() > 1000){
+                System.out.println("Your comment exceed the maximum length");
+
+            }
+
+            if(userid == hostid){
+                int hostComment = st.executeUpdate("UPDATE reservations SET host_rate='"+rate+"', host_comment= '"+comment
+                        +"' WHERE hostid='" + hostid +"' AND renterid='" + renterid + "' AND lid='"
+                        + lid + "' AND start_date='" + starttime + "' AND end_date='" + endtime + "' AND status=1");
+                if(hostComment == 1){
+                    System.out.println("Successfully to update corresponding reservation's review. Your host id is " + userid);
+                }
+                else{
+                    System.out.println("Fail to update corresponding reservation's review. Your host id is " + userid);
+                }
+            }
+            else{
+                int renterComment = st.executeUpdate("UPDATE reservations SET renter_rate='"+rate+"', renter_comment= '"+comment
+                        +"' WHERE hostid='" + hostid +"' AND renterid='" + renterid + "' AND lid='"
+                        + lid + "' AND start_date='" + starttime + "' AND end_date='" + endtime + "' AND status=1");
+                if(renterComment == 1){
+                    System.out.println("Successfully to update corresponding reservation's review. Your renter id is " + userid);
+                }
+                else{
+                    System.out.println("Fail to update corresponding reservation's review. Your renter id is " + userid);
+                }
+            }
             conn.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
@@ -95,7 +121,6 @@ public class deleteReservation {
 
 
 
-
-
     }
+
 }

@@ -98,7 +98,7 @@ public class insertListing {
             // Check is this location are been used, USE unique combination: ADDRESS + ROOMID + city + country
             ResultSet checkAddress = statement.executeQuery("SELECT * FROM lists WHERE address='"
                     + address + "' AND roomid='" + roomid + "' AND city ='"
-                    + city + "' AND country='" + country + "' AND exist=1");
+                    + city + "' AND country='" + country + "' AND status=1");
             if (checkAddress.next()) {
                 System.out.println("ERROR: the house address you enter is exist! please check you address and roomid is correct");
                 return;
@@ -107,13 +107,13 @@ public class insertListing {
             //If this list are owned by this user, but he/she deleted it. We will change exist from 0 to 1.
             ResultSet checkHouseAvailable = statement.executeQuery("SELECT * FROM lists NATURAL JOIN owns WHERE address='"
                     + address + "' AND roomid='" + roomid + "' AND city ='"
-                    + city + "' AND country='" + country + "' AND exist=0 AND uid='" + sin + "'");
+                    + city + "' AND country='" + country + "' AND status=0 AND uid='" + sin + "'");
 
             if (checkHouseAvailable.next()) {
                 System.out.println("here");
-                int updateAvailable = statement.executeUpdate("UPDATE lists SET exist=1 WHERE address='"
+                int updateAvailable = statement.executeUpdate("UPDATE lists SET status=1 WHERE address='"
                         + address + "' AND roomid='" + roomid + "' AND city ='"
-                        + city + "' AND country='" + country + "' AND exist=0");
+                        + city + "' AND country='" + country + "' AND status=0");
                 if (updateAvailable == 1){
                     System.out.println("The system detect you own this list before, Already automatically re-add this list for u :).");
                     System.out.println("If you want to update other info, please go to other update function to do that.");
