@@ -23,13 +23,13 @@ public class insertOwns {
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
 
-            ResultSet resultSet = st.executeQuery("SELECT * FROM lists WHERE lid= '"+lid+"' AND exist = 1 ");
+            ResultSet resultSet = st.executeQuery("SELECT * FROM lists WHERE lid= '"+lid+"' AND status = 1 ");
             if (resultSet.next() == false){
                 System.out.println("Such listing does not exist");
                 return;
             }
 
-            ResultSet resultSet1 = st.executeQuery("SELECT * FROM user WHERE uid= '"+hostid+"' AND exist = 1 ");
+            ResultSet resultSet1 = st.executeQuery("SELECT * FROM user WHERE uid= '"+hostid+"' AND status = 1 ");
             if (resultSet1.next() == false){
                 System.out.println("Such host does not exist");
                 return;

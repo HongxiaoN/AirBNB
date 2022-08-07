@@ -32,19 +32,19 @@ public class hostInsertReview {
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
 
-            ResultSet resultSet = st.executeQuery("SELECT * FROM lists WHERE lid= '"+lid+"' AND exist = 1 ");
+            ResultSet resultSet = st.executeQuery("SELECT * FROM lists WHERE lid= '"+lid+"' AND status = 1 ");
             if (resultSet.next() == false){
                 System.out.println("Such listing does not exist");
                 return;
             }
 
-            ResultSet resultSet1 = st.executeQuery("SELECT * FROM users WHERE lid= '"+renterid+"' AND exist = 1 ");
+            ResultSet resultSet1 = st.executeQuery("SELECT * FROM users WHERE lid= '"+renterid+"' AND status = 1 ");
             if (resultSet.next() == false){
                 System.out.println("Such renter does not exist");
                 return;
             }
 
-            ResultSet resultSet2 = st.executeQuery("SELECT * FROM users WHERE lid= '"+hostid+"' AND exist = 1 ");
+            ResultSet resultSet2 = st.executeQuery("SELECT * FROM users WHERE lid= '"+hostid+"' AND status = 1 ");
             if (resultSet.next() == false){
                 System.out.println("Such host does not exist");
                 return;

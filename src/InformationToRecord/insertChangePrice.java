@@ -30,7 +30,7 @@ public class insertChangePrice {
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
 
-            ResultSet resultSet2 = st.executeQuery("SELECT * FROM users WHERE sin= '"+uid+"' AND exist = 1 ");
+            ResultSet resultSet2 = st.executeQuery("SELECT * FROM users WHERE sin= '"+uid+"' AND status = 1 ");
             if (resultSet2.next() == false){
                 System.out.println("Such host does not exist");
                 return;
@@ -41,7 +41,7 @@ public class insertChangePrice {
                 System.out.println("You do not have the permission to change price for the listing you chose");
             }
 
-            ResultSet resultSet = st.executeQuery("SELECT * FROM lists WHERE lid= '"+lid+"' AND exist = 1 ");
+            ResultSet resultSet = st.executeQuery("SELECT * FROM lists WHERE lid= '"+lid+"' AND status = 1 ");
             if (resultSet.next() == false){
                 System.out.println("Such listing does not exist");
                 return;
