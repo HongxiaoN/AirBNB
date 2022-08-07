@@ -38,22 +38,34 @@ public class insertReservation {
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
 
+
             ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '"+lid1+"' AND uid= '"+hostid1+"'");
             if (isHost.next() == false){
                 System.out.println("The host listing combination you entered is invalid!");
                 return;
             }
 
-            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '"+renterid1+"'");
+            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '"+renterid1+"' AND status=1");
             if (isUser.next() == false){
                 System.out.println("You need to sign up for an account in order to proceed");
                 return;
             }
 
-            ResultSet isConflict = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"+renterid1+"' AND (('"+start_date1+"' < end_date AND '"+start_date1+"' >= start_date) OR ('"+end_date1+"' <= end_date AND '"+end_date1+"' > start_date)) AND status = 0");
+            ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '"+hostid1+"' AND status=1");
+            if (isUser.next() == false){
+                System.out.println("Such host does not exist");
+                return;
+            }
+
+            ResultSet isConflict = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"+renterid1+"' AND (('"+start_date1+"' < end_date AND '"+start_date1+"' >= start_date) OR ('"+end_date1+"' <= end_date AND '"+end_date1+"' > start_date)) AND status = 1");
             if (isConflict.next() == true){
                 System.out.println("There is a conflict with your current reservation!");
                 return;
+            }
+
+            ResultSet isCancelled = st.executeQuery("SELECT * FROM reservations WHERE hostid= '"+hostid1+"' AND renterid= '"+renterid1+"' AND lid= '"+lid1+"' AND (('"+start_date1+"' < end_date AND '"+start_date1+"' >= start_date) OR ('"+end_date1+"' <= end_date AND '"+end_date1+"' > start_date)) AND status=0 ");
+            if (isCancelled.next() == true){
+
             }
 
             st.executeUpdate("INSERT INTO reservations " +

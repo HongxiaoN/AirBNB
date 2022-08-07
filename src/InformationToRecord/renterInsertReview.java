@@ -41,8 +41,11 @@ public class renterInsertReview {
 
             }
 
-            st.executeUpdate("UPDATE reservations SET renter_rate='"+rate+"', renter_comment= '"+comment+"' WHERE renterid= '"+renterid+"' AND hostid= '"+hostid+"' AND lid= '"+lid+"' ");
-
+            int isfind = st.executeUpdate("UPDATE reservations SET renter_rate='"+rate+"', renter_comment= '"+comment+"' WHERE renterid= '"+renterid+"' AND hostid= '"+hostid+"' AND lid= '"+lid+"' ");
+            if (isfind != 1){
+                System.out.println("Did not find a reservation combination with your input");
+                return;
+            }
             conn.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
