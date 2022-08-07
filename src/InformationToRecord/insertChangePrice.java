@@ -30,7 +30,7 @@ public class insertChangePrice {
             Connection conn = DriverManager.getConnection(url,"root","");
             Statement st = conn.createStatement();
 
-            ResultSet resultSet2 = st.executeQuery("SELECT * FROM users WHERE lid= '"+uid+"' AND exist = 1 ");
+            ResultSet resultSet2 = st.executeQuery("SELECT * FROM users WHERE sin= '"+uid+"' AND exist = 1 ");
             if (resultSet2.next() == false){
                 System.out.println("Such host does not exist");
                 return;

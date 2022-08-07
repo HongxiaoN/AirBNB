@@ -1,4 +1,5 @@
 package InformationToRecord;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,55 +22,82 @@ public class insertReservation {
         System.out.println("Please enter the start date: ");
         int start_date1 = scInt.nextInt();
 
-        if (start_date1 < 20220101){
+        if (start_date1 < 20220101) {
             System.out.println("Cannot make reservation that has already passed!");
             return;
         }
 
         System.out.println("Please enter the end date: ");
         int end_date1 = scInt.nextInt();
-        if (end_date1 < 20220101 || start_date1 >= end_date1){
+        if (end_date1 < 20220101 || start_date1 >= end_date1) {
             System.out.println("Such end date is invalid!");
             return;
         }
 
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";
-            Connection conn = DriverManager.getConnection(url,"root","");
+            Connection conn = DriverManager.getConnection(url, "root", "");
             Statement st = conn.createStatement();
 
-
-            ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '"+lid1+"' AND uid= '"+hostid1+"'");
-            if (isHost.next() == false){
+            ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '" + lid1 + "' AND uid= '" + hostid1 + "'");
+            if (!isHost.next()) {
                 System.out.println("The host listing combination you entered is invalid!");
                 return;
             }
-
-            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '"+renterid1+"' AND status=1");
-            if (isUser.next() == false){
+            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '" + renterid1 + "' AND status=1");
+            if (!isUser.next()) {
                 System.out.println("You need to sign up for an account in order to proceed");
                 return;
             }
 
-            ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '"+hostid1+"' AND status=1");
-            if (isUser.next() == false){
+            ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '" + hostid1 + "' AND status=1");
+            if (!isUser1.next()) {
                 System.out.println("Such host does not exist");
                 return;
             }
 
-            ResultSet isConflict = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"+renterid1+"' AND (('"+start_date1+"' < end_date AND '"+start_date1+"' >= start_date) OR ('"+end_date1+"' <= end_date AND '"+end_date1+"' > start_date)) AND status = 1");
-            if (isConflict.next() == true){
+            ResultSet isConflictrenter = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"
+                    + renterid1 + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1
+                    + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) AND status = 1");
+            if (isConflictrenter.next()) {
                 System.out.println("There is a conflict with your current reservation!");
                 return;
             }
 
-            ResultSet isCancelled = st.executeQuery("SELECT * FROM reservations WHERE hostid= '"+hostid1+"' AND renterid= '"+renterid1+"' AND lid= '"+lid1+"' AND (('"+start_date1+"' < end_date AND '"+start_date1+"' >= start_date) OR ('"+end_date1+"' <= end_date AND '"+end_date1+"' > start_date)) AND status=0 ");
-            if (isCancelled.next() == true){
+            ResultSet isConflictlist = st.executeQuery("SELECT * FROM reservations WHERE lid= '" + lid1
+                    + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) AND status = 1");
 
+            if (isConflictlist.next()) {
+                System.out.println("There is a conflict with listing's reservation!");
+                return;
             }
 
+            ResultSet isCancelled = st.executeQuery("SELECT * FROM reservations WHERE hostid= '" + hostid1 + "' AND renterid= '"
+                    + renterid1 + "' AND lid= '" + lid1 + "' AND start_date= '" + start_date1 + "' AND end_date= '"
+                    + end_date1 + "' AND status=0 ");
+
+            if (isCancelled.next()) {
+                ResultSet iscancelled_by = st.executeQuery("SELECT * FROM reservations WHERE hostid= '" + hostid1 + "' AND renterid= '"
+                        + renterid1 + "' AND lid= '" + lid1 + "' AND  start_date= '" + start_date1 + "' AND end_date= '"
+                        + end_date1 + "' AND status=0 AND cancelled_by= '" + renterid1 + "' ");
+
+                if (iscancelled_by.next()) {
+                    int isupdated = st.executeUpdate("UPDATE reservations SET status=1, cancelled_by = NULL WHERE hostid= '" + hostid1 + "' AND renterid= '" +
+                            renterid1 + "' AND lid= '" + lid1 + "' AND  start_date= '" + start_date1 + "' AND end_date= '" + end_date1 + "' ");
+
+                    if (isupdated != 1) {
+                        System.out.println("Failed to add back cancelled reservation");
+                    }
+                    return;
+                } else {
+                    System.out.println("This reservation has been cancelled by another user");
+                    return;
+                }
+            }
+
+
             st.executeUpdate("INSERT INTO reservations " +
-                    "VALUES ('"+hostid1+"','"+renterid1+"', '"+lid1+"', '"+start_date1+"','"+end_date1+"', 0, 3, NULL, 3, NULL)");
+                    "VALUES ('" + hostid1 + "','" + renterid1 + "', '" + lid1 + "', '" + start_date1 + "','" + end_date1 + "', 1,NULL, 3, NULL, 3, NULL)");
 
             conn.close();
         } catch (Exception e) {
