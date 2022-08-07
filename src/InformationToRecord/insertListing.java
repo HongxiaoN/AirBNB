@@ -39,7 +39,7 @@ public class insertListing {
             System.out.println("The listing type should be 'house', 'apartment' or 'room'.");
             System.out.println("What is listing type:");
             String type = inputType.nextLine().toLowerCase();              //reads string
-            if (!(type.equals("house") || type.equals("apartment") || type == "room")) {
+            if (!(type.equals("house") || type.equals("apartment") || type.equals("room"))) {
                 System.out.println("ERROR: The type u insert is not in correct format.");
                 return;
             }
@@ -110,7 +110,6 @@ public class insertListing {
                     + city + "' AND country='" + country + "' AND status=0 AND uid='" + sin + "'");
 
             if (checkHouseAvailable.next()) {
-                System.out.println("here");
                 int updateAvailable = statement.executeUpdate("UPDATE lists SET status=1 WHERE address='"
                         + address + "' AND roomid='" + roomid + "' AND city ='"
                         + city + "' AND country='" + country + "' AND status=0");
@@ -182,8 +181,6 @@ public class insertListing {
             Scanner input_listID = new Scanner(System.in);
             int listID = input_listID.nextInt();
 
-
-
             //INSERT a new list for this user.
             int newList = statement.executeUpdate("INSERT INTO lists VALUES ('"
                     + listID + "', '" + type + "', '" + latitude + "', '" + longitude + "', '" + roomid
@@ -201,6 +198,7 @@ public class insertListing {
                 else {
                     System.out.println("Unable to create a relation between this user and list.");
                 }
+
             }
             else {
                 System.out.println("This lid is already used, please choose again.");

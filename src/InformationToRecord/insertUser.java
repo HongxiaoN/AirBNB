@@ -16,8 +16,6 @@ public class insertUser {
         System.out.println("Please enter your SIN number: ");
         Scanner scInt = new Scanner(System.in);
         int sin = scInt.nextInt();
-//        Scanner scBool = new Scanner(System.in);
-//        boolean status
         System.out.println("Please enter your name: ");
         Scanner sc = new Scanner(System.in);    //System.in is a standard input stream
         String username = sc.nextLine().toLowerCase();
@@ -36,7 +34,6 @@ public class insertUser {
         String occupation = sc.nextLine().toLowerCase();
         System.out.println("Please enter your card number: ");
         int card = scInt.nextInt();
-
 
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";

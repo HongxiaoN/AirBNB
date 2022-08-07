@@ -1,6 +1,9 @@
 package InformationToRecord;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class renterAllReservations {
@@ -14,15 +17,27 @@ public class renterAllReservations {
         Scanner scInt = new Scanner(System.in);
         int sin = scInt.nextInt();
 
-        System.out.println("hostid renterid lid start_date  end_date  status host_rate host+comment renter_rate renter_comment");
+
 
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";
-            Connection conn = DriverManager.getConnection(url,"root","");
+            Connection conn = DriverManager.getConnection(url, "root", "");
             Statement st = conn.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"+sin+"'");
-            while (resultSet.next()) {
-                System.out.println(resultSet.getInt(1) + "      " + resultSet.getInt(2) + "        "  + resultSet.getInt(3) + "  "  + resultSet.getInt(4) + "    "  + resultSet.getInt(5) + "  "  + resultSet.getBoolean(6) + "  " + resultSet.getInt(7) + "         " + resultSet.getString(8) + "         " + resultSet.getInt(9) + "           "  + resultSet.getString(10) );
+
+            // Check user is in users
+            ResultSet checkHost = st.executeQuery("SELECT sin FROM users WHERE sin='" + sin + "' AND status=1");
+            if (!checkHost.next()) {
+                System.out.println("ERROR: the host: " + sin + ", you enter are not exist! please check the sin is correct");
+                return;
+            } else {
+                ResultSet resultSet = st.executeQuery("SELECT * FROM reservations WHERE renterid= '" + sin + "'");
+                System.out.println("hostid renterid lid start_date  end_date  status cancelled_by host_rate host+comment renter_rate renter_comment");
+                while (resultSet.next()) {
+                    System.out.println(resultSet.getInt(1) + "      " + resultSet.getInt(2) + "        " + resultSet.getInt(3)
+                            + "    " + resultSet.getInt(4) + "   " + resultSet.getInt(5) + "  "
+                            + resultSet.getBoolean(6) + "            " + resultSet.getInt(7) + "     "
+                            + resultSet.getString(8) + "         " + resultSet.getString(9) + "           "
+                            + resultSet.getString(10) + "      " + resultSet.getString(11));                }
             }
 
             conn.close();

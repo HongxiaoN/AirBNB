@@ -18,7 +18,6 @@ public class hostAllReservations {
         Scanner scInt = new Scanner(System.in);
         int sin = scInt.nextInt();
 
-        System.out.println("hostid renterid lid start_date  end_date  status cancelled_by host_rate host+comment renter_rate renter_comment");
 
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";
@@ -31,6 +30,7 @@ public class hostAllReservations {
                 System.out.println("ERROR: the host: " + sin + ", you enter are not exist! please check the sin is correct");
                 return;
             } else {
+                System.out.println("hostid renterid lid start_date  end_date  status cancelled_by host_rate host+comment renter_rate renter_comment");
                 ResultSet resultSet = st.executeQuery("SELECT * FROM reservations WHERE hostid= '" + sin + "'");
                 while (resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + "      " + resultSet.getInt(2) + "        " + resultSet.getInt(3)

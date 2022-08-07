@@ -23,8 +23,8 @@ public class insertReservation {
 
             System.out.println("The following time period associated with the listing you entered are NOT available.");
             System.out.println("lid  start_date   end_date");
-            ResultSet listlist = st.executeQuery("SELECT lid, start_date, end_date FROM reservations WHERE lid='"+lid1+"' AND status=1");
-            while(listlist.next()){
+            ResultSet listlist = st.executeQuery("SELECT lid, start_date, end_date FROM reservations WHERE lid='" + lid1 + "' AND status=1");
+            while (listlist.next()) {
                 System.out.println(listlist.getInt(1) + "   " + listlist.getInt(2) + "     " + listlist.getInt(3));
             }
 
@@ -37,7 +37,6 @@ public class insertReservation {
                 System.out.println("You need to sign up for an account in order to proceed");
                 return;
             }
-
 
             System.out.println("Please enter the start date: ");
             int start_date1 = scInt.nextInt();
@@ -54,23 +53,20 @@ public class insertReservation {
             }
 
             //print out change price table and also default price for the other time period
-            ResultSet changeprice = st.executeQuery("SELECT * FROM changeprice WHERE lid= '"+lid1+"' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) ");
-            while (changeprice.next()){
+            ResultSet changeprice = st.executeQuery("SELECT * FROM changeprice WHERE lid= '" + lid1 + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) ");
+            while (changeprice.next()) {
                 System.out.println(listlist.getInt(1) + " " + listlist.getInt(2) + " " + listlist.getInt(3) + " " + listlist.getInt(4));
             }
-          
-            ResultSet defaultprice = st.executeQuery("SELECT default_price FROM lists WHERE lid= '"+lid1+"' ");
+
+            ResultSet defaultprice = st.executeQuery("SELECT default_price FROM lists WHERE lid= '" + lid1 + "' ");
             defaultprice.next();
             System.out.println("All other time period beside above time period are set to default price of " + defaultprice.getInt(1));
-
-
 
             ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '" + lid1 + "' AND uid= '" + hostid1 + "'");
             if (!isHost.next()) {
                 System.out.println("The host listing combination you entered is invalid!");
                 return;
             }
-
 
             ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '" + hostid1 + "' AND status=1");
             if (!isUser1.next()) {
@@ -115,12 +111,10 @@ public class insertReservation {
                     System.out.println("This reservation has been cancelled by another user");
                     return;
                 }
+            } else {
+                st.executeUpdate("INSERT INTO reservations " +
+                        "VALUES ('" + hostid1 + "','" + renterid1 + "', '" + lid1 + "', '" + start_date1 + "','" + end_date1 + "', 1,NULL, 3, NULL, 3, NULL)");
             }
-
-
-            st.executeUpdate("INSERT INTO reservations " +
-                    "VALUES ('" + hostid1 + "','" + renterid1 + "', '" + lid1 + "', '" + start_date1 + "','" + end_date1 + "', 1,NULL, 3, NULL, 3, NULL)");
-
             conn.close();
         } catch (Exception e) {
             System.err.println("Got an exception! ");
