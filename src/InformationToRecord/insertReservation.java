@@ -12,43 +12,65 @@ public class insertReservation {
         System.out.println("Welcome to AirBNB!\nThis function is for making a new reservation for a specific time range on the system.");
         System.out.println("-----------------------------------------------------\n");
 
-        System.out.println("Please enter the SIN number of the host: ");
-        Scanner scInt = new Scanner(System.in);
-        int hostid1 = scInt.nextInt();
-        System.out.println("Please enter your SIN number: ");
-        int renterid1 = scInt.nextInt();
-        System.out.println("Please enter the listing ID that you would like to proceed: ");
-        int lid1 = scInt.nextInt();
-        System.out.println("Please enter the start date: ");
-        int start_date1 = scInt.nextInt();
-
-        if (start_date1 < 20220101) {
-            System.out.println("Cannot make reservation that has already passed!");
-            return;
-        }
-
-        System.out.println("Please enter the end date: ");
-        int end_date1 = scInt.nextInt();
-        if (end_date1 < 20220101 || start_date1 >= end_date1) {
-            System.out.println("Such end date is invalid!");
-            return;
-        }
-
         try {
             String url = "jdbc:mysql://localhost:3306/C43Project";
             Connection conn = DriverManager.getConnection(url, "root", "");
             Statement st = conn.createStatement();
+
+            Scanner scInt = new Scanner(System.in);
+            System.out.println("Please enter the listing ID that you would like to proceed: ");
+            int lid1 = scInt.nextInt();
+
+            System.out.println("The following time period associated with the listing you entered are NOT available.");
+            System.out.println("lid  start_date   end_date");
+            ResultSet listlist = st.executeQuery("SELECT lid, start_date, end_date FROM reservations WHERE lid='"+lid1+"' AND status=1");
+            while(listlist.next()){
+                System.out.println(listlist.getInt(1) + "   " + listlist.getInt(2) + "     " + listlist.getInt(3));
+            }
+
+            System.out.println("Please enter the SIN number of the host: ");
+            int hostid1 = scInt.nextInt();
+            System.out.println("Please enter your SIN number: ");
+            int renterid1 = scInt.nextInt();
+            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '" + renterid1 + "' AND status=1");
+            if (!isUser.next()) {
+                System.out.println("You need to sign up for an account in order to proceed");
+                return;
+            }
+
+
+            System.out.println("Please enter the start date: ");
+            int start_date1 = scInt.nextInt();
+
+            if (start_date1 < 20220101) {
+                System.out.println("Cannot make reservation that has already passed!");
+                return;
+            }
+            System.out.println("Please enter the end date: ");
+            int end_date1 = scInt.nextInt();
+            if (end_date1 < 20220101 || start_date1 >= end_date1) {
+                System.out.println("Such end date is invalid!");
+                return;
+            }
+
+            //print out change price table and also default price for the other time period
+            ResultSet changeprice = st.executeQuery("SELECT * FROM changeprice WHERE lid= '"+lid1+"' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) ");
+            while (changeprice.next()){
+                System.out.println(listlist.getInt(1) + " " + listlist.getInt(2) + " " + listlist.getInt(3) + " " + listlist.getInt(4));
+            }
+          
+            ResultSet defaultprice = st.executeQuery("SELECT default_price FROM lists WHERE lid= '"+lid1+"' ");
+            defaultprice.next();
+            System.out.println("All other time period beside above time period are set to default price of " + defaultprice.getInt(1));
+
+
 
             ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '" + lid1 + "' AND uid= '" + hostid1 + "'");
             if (!isHost.next()) {
                 System.out.println("The host listing combination you entered is invalid!");
                 return;
             }
-            ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '" + renterid1 + "' AND status=1");
-            if (!isUser.next()) {
-                System.out.println("You need to sign up for an account in order to proceed");
-                return;
-            }
+
 
             ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '" + hostid1 + "' AND status=1");
             if (!isUser1.next()) {
