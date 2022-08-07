@@ -4,14 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class insertListing {
     public static void main(String[] args) {
         System.out.println("-----------------------------------------------------");
         System.out.println("Welcome to AirBNB.");
-        System.out.println("This createListing function is for insert a new listing for a host(user) " +
+        System.out.println("This createListing function is for insert a new listing for a host(user)" +
                 "with checking input validation");
         System.out.println("-----------------------------------------------------\n");
 
@@ -28,7 +27,7 @@ public class insertListing {
 
             System.out.println("-----------------------------------------------------\n");
             // Check sin is in users
-            ResultSet checkSIN = statement.executeQuery("SELECT sin FROM users WHERE sin='" + sin + " AND status=1'");
+            ResultSet checkSIN = statement.executeQuery("SELECT sin FROM users WHERE sin='" + sin + "' AND status=1");
             if (!checkSIN.next()) {
                 System.out.println("ERROR: the sin(user): " + sin + ", you enter are not exist! please check you sin is correct");
                 return;
