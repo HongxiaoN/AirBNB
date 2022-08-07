@@ -3,12 +3,12 @@ package ReportsToSupport;
 import java.sql.*;
 import java.util.Scanner;
 
-public class numberOfBookingByLocation {
+public class totalListingsByDate {
     public static void main(String[] args) {
 
         System.out.println("-----------------------------------------------------");
         System.out.println("Welcome to AirBNB!\nThis function is for providing the total number of bookings in a " +
-                "specific date range by city, or by zip code within a city..");
+                "specific date range by city, or by zip code within a city.");
         System.out.println("-----------------------------------------------------\n");
 
         try {
