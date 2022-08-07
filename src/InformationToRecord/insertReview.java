@@ -56,20 +56,27 @@ public class insertReview {
             }
 
             System.out.println("You can only write review for past reservation. Please enter start time for this reservation: ");
-            int starttime = scInt.nextInt();
-            if(starttime > 20220101){
+            int startdate = scInt.nextInt();
+            if(startdate > 20220101){
                 System.out.println("You can only write review for past reservation.");
+                return;
             }
             System.out.println("You can only write review for past reservation. Please enter end time for this reservation: ");
-            int endtime = scInt.nextInt();
-            if(endtime > 20220101){
-                System.out.println("You can only write review for past reservation.");
+            int enddate = scInt.nextInt();
+            if(enddate < startdate){
+                System.out.println("End date must be late than start date.");
+                return;
+            }
+
+            if (enddate < 20211131){
+                System.out.println("This reservation has already passed more than one month. It cannot be reviewed anymore");
+                return;
             }
 
             // Check reservation is in reservations table
             ResultSet checkReservation = st.executeQuery("SELECT * FROM reservations WHERE hostid='" + hostid +"' AND renterid='"
-                    + renterid + "' AND lid='" + lid + "' AND start_date='" + starttime + "' AND end_date='"
-                    + endtime + "' AND status=1");
+                    + renterid + "' AND lid='" + lid + "' AND start_date='" + startdate + "' AND end_date='"
+                    + enddate + "' AND status=1");
             if (!checkReservation.next()) {
                 System.out.println("ERROR: This reservation is not exist. Please check again!");
                 return;
@@ -79,6 +86,7 @@ public class insertReview {
             int rate = scInt.nextInt();
             if (rate < 1 || rate > 5){
                 System.out.println("Invalid rating, should be an integer between 1 to 5!");
+                return;
             }
 
             Scanner sc = new Scanner(System.in);
@@ -86,13 +94,13 @@ public class insertReview {
             String comment = sc.nextLine();
             if (comment.length() > 1000){
                 System.out.println("Your comment exceed the maximum length");
-
+                return;
             }
 
             if(userid == hostid){
                 int hostComment = st.executeUpdate("UPDATE reservations SET host_rate='"+rate+"', host_comment= '"+comment
                         +"' WHERE hostid='" + hostid +"' AND renterid='" + renterid + "' AND lid='"
-                        + lid + "' AND start_date='" + starttime + "' AND end_date='" + endtime + "' AND status=1");
+                        + lid + "' AND start_date='" + startdate + "' AND end_date='" + enddate + "' AND status=1");
                 if(hostComment == 1){
                     System.out.println("Successfully to update corresponding reservation's review. Your host id is " + userid);
                 }
@@ -103,7 +111,7 @@ public class insertReview {
             else{
                 int renterComment = st.executeUpdate("UPDATE reservations SET renter_rate='"+rate+"', renter_comment= '"+comment
                         +"' WHERE hostid='" + hostid +"' AND renterid='" + renterid + "' AND lid='"
-                        + lid + "' AND start_date='" + starttime + "' AND end_date='" + endtime + "' AND status=1");
+                        + lid + "' AND start_date='" + startdate + "' AND end_date='" + enddate + "' AND status=1");
                 if(renterComment == 1){
                     System.out.println("Successfully to update corresponding reservation's review. Your renter id is " + userid);
                 }
