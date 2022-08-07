@@ -21,13 +21,14 @@ public class insertReservation {
             System.out.println("Please enter the listing ID that you would like to proceed: ");
             int lid1 = scInt.nextInt();
 
+            System.out.println("-----------------------------------------------------");
             System.out.println("The following time period associated with the listing you entered are NOT available.");
             System.out.println("lid  start_date   end_date");
             ResultSet listlist = st.executeQuery("SELECT lid, start_date, end_date FROM reservations WHERE lid='" + lid1 + "' AND status=1");
             while (listlist.next()) {
                 System.out.println(listlist.getInt(1) + "   " + listlist.getInt(2) + "     " + listlist.getInt(3));
             }
-
+            System.out.println("-----------------------------------------------------");
             System.out.println("Please enter the SIN number of the host: ");
             int hostid1 = scInt.nextInt();
             System.out.println("Please enter your SIN number: ");
@@ -52,8 +53,10 @@ public class insertReservation {
                 return;
             }
 
+            System.out.println("-----------------------------------------------------");
             //print out change price table and also default price for the other time period
             ResultSet changeprice = st.executeQuery("SELECT * FROM changeprice WHERE lid= '" + lid1 + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) ");
+            System.out.println("lid \tstart_date \tend_date \tprice");
             while (changeprice.next()) {
                 System.out.println(listlist.getInt(1) + " " + listlist.getInt(2) + " " + listlist.getInt(3) + " " + listlist.getInt(4));
             }
@@ -61,6 +64,7 @@ public class insertReservation {
             ResultSet defaultprice = st.executeQuery("SELECT default_price FROM lists WHERE lid= '" + lid1 + "' ");
             defaultprice.next();
             System.out.println("All other time period beside above time period are set to default price of " + defaultprice.getInt(1));
+            System.out.println("-----------------------------------------------------");
 
             ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '" + lid1 + "' AND uid= '" + hostid1 + "'");
             if (!isHost.next()) {
