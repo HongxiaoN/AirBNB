@@ -6,29 +6,20 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class findListsBaseLatitude {
+public class findListsBasePostal {
     public static void main(String[] args) {
         System.out.println("-----------------------------------------------------");
-        System.out.println("Welcome to AirBNB!\nThis function is for giving a specific latitude and longitude, return all listings with a specific distance.");
+        System.out.println("Welcome to AirBNB!\nThis function is for giving a specific postal code, return all listings with a specific distance.");
         System.out.println("-----------------------------------------------------\n");
 
         try {
             Scanner scInt = new Scanner(System.in);
-            System.out.println("LATITUDE should be a four digit number from -9999 to 9999 ");
-            System.out.println("Please enter the LATITUDE: ");
-            int latitude = scInt.nextInt();
+            System.out.println("Postal Code should be a four digit number from 0 - 9999 ");
+            System.out.println("Please enter the Postal Code: ");
+            int postal = scInt.nextInt();
 
-            if (latitude < -9999 || latitude > 9999) {
-                System.out.println("ERROR: LATITUDE should be a four digit number from -9999 to 9999 ");
-                return;
-            }
-
-            System.out.println("LONGITUDE should be a four digit number from -9999 to 9999 ");
-            System.out.println("Please enter the LONGITUDE: ");
-            int longitude = scInt.nextInt();
-
-            if (longitude < -9999 || longitude > 9999) {
-                System.out.println("ERROR: LONGITUDE should be a four digit number from -9999 to 9999 ");
+            if (postal < 0 || postal > 9999) {
+                System.out.println("ERROR: Postal Code should be a four digit number from -9999 to 9999 ");
                 return;
             }
 
@@ -73,14 +64,13 @@ public class findListsBaseLatitude {
             Statement st = conn.createStatement();
 
             if (rank.equals("D") && SortBY.equals("A")) {
-                ResultSet resultSet = st.executeQuery("SELECT *, SQRT( POW((L.longitude - '" + longitude
-                        + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
+                ResultSet resultSet = st.executeQuery("SELECT *, Abs(postal_code - '" + postal + "') AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
                         + distance + "' Order by distance ASC");
                 System.out.println("-----------------------------------------------------");
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()) {
+                while (resultSet.next()){
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(19) + " \t\t\t" + resultSet.getInt(3) + " \t\t\t"
                             + resultSet.getInt(4) + " \t\t\t" + resultSet.getInt(5) + " \t\t"
@@ -95,14 +85,13 @@ public class findListsBaseLatitude {
                 }
                 System.out.println("-----------------------------------------------------\n");
             } else if (rank.equals("D") && SortBY.equals("D")) {
-                ResultSet resultSet = st.executeQuery("SELECT *, SQRT( POW((L.longitude - '" + longitude
-                        + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
+                ResultSet resultSet = st.executeQuery("SELECT *, Abs(postal_code - '" + postal + "') AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
                         + distance + "' Order by distance DESC");
                 System.out.println("-----------------------------------------------------");
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()) {
+                while (resultSet.next()){
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(19) + " \t\t\t" + resultSet.getInt(3) + " \t\t\t"
                             + resultSet.getInt(4) + " \t\t\t" + resultSet.getInt(5) + " \t\t"
@@ -120,7 +109,7 @@ public class findListsBaseLatitude {
                         "SELECT * FROM((SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
                                 "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
-                                "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, C1.price AS NEW " +
+                                "Abs(postal_code - '" + postal + "') AS distance, C1.price AS NEW " +
                                 "FROM lists AS L JOIN changeprice AS C1 ON L.lid = C1.lid " +
                                 "WHERE L.status = 1 AND C1.start_date <= 20220101 AND C1.end_date >= 20220102 AND EXISTS" +
                                 " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid =L.lid)" +
@@ -128,7 +117,7 @@ public class findListsBaseLatitude {
                                 "(SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
                                 "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
-                                "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, L.default_price AS NEW " +
+                                "Abs(postal_code - '" + postal + "') AS distance, L.default_price AS NEW " +
                                 "FROM lists AS L " +
                                 "WHERE L.status = 1 AND NOT EXISTS " +
                                 " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid = L.lid)" +
@@ -138,7 +127,7 @@ public class findListsBaseLatitude {
                 System.out.println("lid \thouse_type \tdistance \tprice \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()) {
+                while (resultSet.next()){
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(18) + " \t\t\t" + resultSet.getInt(19) + " \t"
                             + resultSet.getInt(3) + " \t\t\t"
@@ -153,12 +142,13 @@ public class findListsBaseLatitude {
                     );
                 }
                 System.out.println("-----------------------------------------------------");
-            } else if (rank.equals("P") && SortBY.equals("D")) {
+            }
+            else if (rank.equals("P") && SortBY.equals("D")) {
                 ResultSet resultSet = st.executeQuery(
                         "SELECT * FROM((SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
                                 "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
-                                "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, C1.price AS NEW " +
+                                "Abs(postal_code - '" + postal + "') AS distance, C1.price AS NEW " +
                                 "FROM lists AS L JOIN changeprice AS C1 ON L.lid = C1.lid " +
                                 "WHERE L.status = 1 AND C1.start_date <= 20220101 AND C1.end_date >= 20220102 AND EXISTS" +
                                 " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid =L.lid)" +
@@ -166,7 +156,7 @@ public class findListsBaseLatitude {
                                 "(SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
                                 "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
-                                "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, L.default_price AS NEW " +
+                                "Abs(postal_code - '" + postal + "') AS distance, L.default_price AS NEW " +
                                 "FROM lists AS L " +
                                 "WHERE L.status = 1 AND NOT EXISTS " +
                                 " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid = L.lid)" +
@@ -176,7 +166,7 @@ public class findListsBaseLatitude {
                 System.out.println("lid \thouse_type \tdistance \tprice \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()) {
+                while (resultSet.next()){
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(18) + " \t\t\t" + resultSet.getInt(19) + " \t"
                             + resultSet.getInt(3) + " \t\t\t"
@@ -200,4 +190,5 @@ public class findListsBaseLatitude {
             System.err.println(e.getMessage());
         }
     }
+
 }
