@@ -70,7 +70,7 @@ public class findListsBasePostal {
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()){
+                while (resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(19) + " \t\t\t" + resultSet.getInt(3) + " \t\t\t"
                             + resultSet.getInt(4) + " \t\t\t" + resultSet.getInt(5) + " \t\t"
@@ -91,7 +91,7 @@ public class findListsBasePostal {
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()){
+                while (resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(19) + " \t\t\t" + resultSet.getInt(3) + " \t\t\t"
                             + resultSet.getInt(4) + " \t\t\t" + resultSet.getInt(5) + " \t\t"
@@ -127,7 +127,7 @@ public class findListsBasePostal {
                 System.out.println("lid \thouse_type \tdistance \tprice \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()){
+                while (resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(18) + " \t\t\t" + resultSet.getInt(19) + " \t"
                             + resultSet.getInt(3) + " \t\t\t"
@@ -142,8 +142,7 @@ public class findListsBasePostal {
                     );
                 }
                 System.out.println("-----------------------------------------------------");
-            }
-            else if (rank.equals("P") && SortBY.equals("D")) {
+            } else if (rank.equals("P") && SortBY.equals("D")) {
                 ResultSet resultSet = st.executeQuery(
                         "SELECT * FROM((SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
@@ -166,7 +165,7 @@ public class findListsBasePostal {
                 System.out.println("lid \thouse_type \tdistance \tprice \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
                         "\tkitchen_dishes \tkitchen_fridge \tdefault_price \tcreated_at \tstatus");
-                while (resultSet.next()){
+                while (resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + " \t\t" + resultSet.getString(2) + " \t\t"
                             + resultSet.getInt(18) + " \t\t\t" + resultSet.getInt(19) + " \t"
                             + resultSet.getInt(3) + " \t\t\t"
