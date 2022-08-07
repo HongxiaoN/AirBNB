@@ -48,7 +48,7 @@ public class insertReservation {
             }
             System.out.println("Please enter the end date: ");
             int end_date1 = scInt.nextInt();
-            if (end_date1 < 20220101 || start_date1 >= end_date1) {
+            if (end_date1 < 20220101 || start_date1 >= end_date1 || end_date1 >20230101) {
                 System.out.println("Such end date is invalid!");
                 return;
             }

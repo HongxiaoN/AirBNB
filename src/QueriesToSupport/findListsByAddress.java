@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class findListsBaseAddress {
+public class findListsByAddress {
     public static void main(String[] args) {
         System.out.println("-----------------------------------------------------");
         System.out.println("Welcome to AirBNB!\nThis function is for giving a specific ADDRESS, return all listings with a specific distance.");
