@@ -30,7 +30,7 @@ public class totalListingsByLocation {
             if (option == 'A') {
                 ResultSet resultSet = st.executeQuery("SELECT country, COUNT(lid) FROM lists GROUP BY country");
 
-                System.out.println("Country\t\t Number of Bookings");
+                System.out.println("Country\t\t Number of Listings");
                 while (resultSet.next()){
                     System.out.println(resultSet.getString(1) + "\t\t" + resultSet.getInt(2));
                 }
@@ -38,7 +38,7 @@ public class totalListingsByLocation {
 //
                 ResultSet resultSet = st.executeQuery("SELECT country, city, COUNT(lid) FROM lists GROUP BY country, city");
 
-                System.out.println("Country \t City\t Number of Bookings");
+                System.out.println("Country \t City\t Number of Listings");
                 while (resultSet.next()){
                     System.out.println(resultSet.getString(1) + "\t\t\t " + resultSet.getString(2) + "\t\t\t" + resultSet.getInt(3));
                 }
@@ -46,7 +46,7 @@ public class totalListingsByLocation {
             } else{
                 ResultSet resultSet = st.executeQuery("SELECT country, city, postal_code, COUNT(lid) FROM lists GROUP BY country, city, postal_code");
 
-                System.out.println("Country \t City\t Postal Code\t Number of Bookings");
+                System.out.println("Country \t City\t Postal Code\t Number of Listings");
                 while (resultSet.next()){
                     System.out.println(resultSet.getString(1) + "\t\t\t " + resultSet.getString(2) + "\t\t\t" + resultSet.getString(3) + "\t\t\t"+ resultSet.getInt(4));
                 }
