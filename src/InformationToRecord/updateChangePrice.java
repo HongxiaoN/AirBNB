@@ -57,18 +57,20 @@ public class updateChangePrice {
             System.out.println("Please enter the price: ");
             int price = scInt.nextInt();
 
-            ResultSet isbooked = st.executeQuery("SELECT * FROM reservations WHERE lid= '" + lid + "' AND (('"
-                    + start_date + "' < end_date AND '" + start_date + "' >= start_date) OR ('"
-                    + end_date + "' <= end_date AND '" + end_date + "' > start_date)) AND status=1");
+            ResultSet isbooked = st.executeQuery("SELECT * FROM reservations WHERE lid= '" + lid +
+                    "' AND (('" + start_date + "' <= start_date AND '" + end_date + "'  > start_date) OR ('"
+                    + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                    + "' >= start_date AND '" + end_date + "' <= end_date) ) AND status=1");
 
             if (isbooked.next()) {
                 System.out.println("This listing has already been booked for this time period. Please cancel the booking then change the price if needed");
                 return;
             }
 
-            ResultSet ischanged = st.executeQuery("SELECT * FROM changeprice WHERE lid= '" + lid + "' AND (('"
-                    + start_date + "' < end_date AND '" + start_date + "' >= start_date) OR ('"
-                    + end_date + "' <= end_date AND '" + end_date + "' > start_date))");
+            ResultSet ischanged = st.executeQuery("SELECT * FROM changeprice WHERE lid= '" + lid +
+                    "' AND (('" + start_date + "' <= start_date AND '" + end_date + "'  > start_date) OR ('"
+                    + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                    + "' >= start_date AND '" + end_date + "' <= end_date) )");
 
             System.out.println("This listing MAY has already been changed price for this time period.");
             System.out.println("If it has conflict in this time period, You will see it in the below table.");

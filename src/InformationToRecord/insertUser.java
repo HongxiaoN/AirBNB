@@ -50,13 +50,10 @@ public class insertUser {
             } else {
                 st.executeUpdate("INSERT INTO users " +
                         "VALUES ('" + sin + "', 1, '" + username + "', '" + email + "', '" + address + "','" + birthday + "', '" + occupation + "','" + card + "')");
-
             }
-
             System.out.println("Successful");
 
             conn.close();
-
         } catch (Exception e) {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());

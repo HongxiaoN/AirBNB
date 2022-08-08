@@ -38,7 +38,7 @@ public class rankRenterListingsbyDateLocation {
             if (option == 'A') {
                 ResultSet resultSet = st.executeQuery("SELECT reservations.renterid, COUNT(reservations.lid) " +
                         "FROM reservations INNER JOIN users ON reservations.renterid = users.sin " +
-                        "WHERE start_date > '" + start_date + "' AND end_date < '" + end_date + "' AND users.status=1 " +
+                        "WHERE start_date > '" + start_date + "' AND end_date < '" + end_date + "' AND users.status=1 AND reservations.renterid != reservations.hostid " +
                         "GROUP BY reservations.renterid ORDER BY COUNT(reservations.lid) DESC");
 
 
@@ -51,7 +51,7 @@ public class rankRenterListingsbyDateLocation {
 
                 ResultSet resultSet = st.executeQuery("SELECT reservations.renterid, lists.city, COUNT(reservations.lid) " +
                         "FROM reservations INNER JOIN users ON reservations.renterid = users.sin INNER JOIN lists ON reservations.lid = lists.lid " +
-                        "WHERE reservations.start_date > '" + start_date + "' AND reservations.end_date < '" + end_date + "' AND users.status=1 " +
+                        "WHERE reservations.start_date > '" + start_date + "' AND reservations.end_date < '" + end_date + "' AND users.status=1 AND reservations.renterid != reservations.hostid " +
                         "GROUP BY reservations.renterid, lists.city HAVING COUNT(reservations.lid) >= 2 ORDER BY COUNT(reservations.lid) DESC");
 
                 System.out.println("Renter ID \t City \t Number of Bookings");

@@ -18,15 +18,22 @@ public class popularPhrases {
             Statement st = conn.createStatement();
 
             Scanner scInt = new Scanner(System.in);
-            System.out.println("What list that you want to see the most popular word?");
+            System.out.println("What is list id?");
             int lid = scInt.nextInt();
-            
+
             // Check renter is in users
             ResultSet checkLid = st.executeQuery("SELECT * FROM lists WHERE lid='" + lid + "' AND status=1");
             if (!checkLid.next()) {
-                System.out.println("ERROR: the lid: " + lid + ", you enter are not exist! please check the sin is correct");
+                System.out.println("ERROR: the lid: " + lid + ", you enter are not exist! please check the lid is correct");
                 return;
             }
+
+            ResultSet checkRenter = st.executeQuery("select substring_index(substring_index(r.title, ' ', n.n), ' ', -1) as word," +
+                    "count(*)" +
+                    "from results r join" +
+                    "numbers n\n" +
+                    "on n.n <= length(title) - length(replace(title, ' ', '')) + 1\n" +
+                    "group by word;");
 
         } catch (Exception e) {
             System.err.println("Got an exception! ");

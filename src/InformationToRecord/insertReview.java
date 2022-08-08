@@ -75,7 +75,7 @@ public class insertReview {
 
             // Check reservation is in reservations table
             ResultSet checkReservation = st.executeQuery("SELECT * FROM reservations WHERE hostid='" + hostid +"' AND renterid='"
-                    + renterid + "' AND lid='" + lid + "' AND start_date='" + startdate + "' AND end_date='"
+                    + renterid + "' AND hostid != renterid AND lid='" + lid + "' AND start_date='" + startdate + "' AND end_date='"
                     + enddate + "' AND status=1");
             if (!checkReservation.next()) {
                 System.out.println("ERROR: This reservation is not exist. Please check again!");
