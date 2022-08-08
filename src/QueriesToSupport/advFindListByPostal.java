@@ -72,12 +72,11 @@ public class advFindListByPostal {
             Statement st = conn.createStatement();
 
             if (SortBY.equals("A")) {
-                ResultSet resultSet = st.executeQuery("SELECT L.*, Abs(postal_code - '" + postal + "') AS distance FROM lists AS L WHERE L.status = 1 "
-                        + "AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1"
-                        + "AND (('" + start_date + "' <= start_date AND '" + end_date
-                        + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
-                        + "' >= start_date AND '" + end_date + "' <= end_date))) HAVING distance < '"
-                        + distance + "' Order by distance ASC");
+                ResultSet resultSet = st.executeQuery("SELECT L.*, Abs(postal_code - '" + postal + "') AS distance FROM lists AS L WHERE L.status = 1 " +
+                        "AND NOT EXISTS ( SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 AND (('" + start_date +
+                        "' <= start_date AND '" + end_date+ "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date +
+                        "' >= start_date AND '" + end_date + "' <= end_date)))" +
+                        "HAVING distance < '" + distance + "' Order by distance ASC");
                 System.out.println("-----------------------------------------------------");
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
@@ -97,8 +96,11 @@ public class advFindListByPostal {
                 }
                 System.out.println("-----------------------------------------------------\n");
             } else if (SortBY.equals("D")) {
-                ResultSet resultSet = st.executeQuery("SELECT *, Abs(postal_code - '" + postal + "') AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
-                        + distance + "' Order by distance DESC");
+                ResultSet resultSet = st.executeQuery("SELECT L.*, Abs(postal_code - '" + postal + "') AS distance FROM lists AS L WHERE L.status = 1 " +
+                        "AND NOT EXISTS ( SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 AND (('" + start_date +
+                        "' <= start_date AND '" + end_date+ "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date +
+                        "' >= start_date AND '" + end_date + "' <= end_date)))" +
+                        "HAVING distance < '" + distance + "' Order by distance DESC");
                 System.out.println("-----------------------------------------------------");
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
                         "\tbathroom_hair_dryer \tbathroom_cleaning_products \tbedroom_essentials \tbedroom_hangers " +
