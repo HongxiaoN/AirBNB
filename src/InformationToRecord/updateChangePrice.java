@@ -85,9 +85,10 @@ public class updateChangePrice {
             String Sure = scStr.nextLine().toUpperCase();
 
             if (Sure.equals("Y")) {
-                int deletePrice = st.executeUpdate("DELETE FROM changeprice WHERE lid= '" + lid + "' AND (('"
-                        + start_date + "' < end_date AND '" + start_date + "' >= start_date) OR ('"
-                        + end_date + "' <= end_date AND '" + end_date + "' > start_date))");
+                int deletePrice = st.executeUpdate("DELETE FROM changeprice WHERE lid= '" + lid +
+                        "' AND (('" + start_date + "' <= start_date AND '" + end_date
+                        + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                        + "' >= start_date AND '" + end_date + "' <= end_date))");
                 System.out.println("Successful deleted " + deletePrice + " date period.");
 
                 int inputPrice = st.executeUpdate("INSERT INTO changeprice " +

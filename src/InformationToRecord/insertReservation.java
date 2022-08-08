@@ -31,6 +31,18 @@ public class insertReservation {
             System.out.println("-----------------------------------------------------");
             System.out.println("Please enter the SIN number of the host: ");
             int hostid1 = scInt.nextInt();
+
+            ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '" + hostid1 + "' AND status=1");
+            if (!isUser1.next()) {
+                System.out.println("Such host does not exist");
+                return;
+            }
+            ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '" + lid1 + "' AND uid= '" + hostid1 + "'");
+            if (!isHost.next()) {
+                System.out.println("The host listing combination you entered is invalid!");
+                return;
+            }
+
             System.out.println("Please enter your SIN number: ");
             int renterid1 = scInt.nextInt();
             ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '" + renterid1 + "' AND status=1");
@@ -54,11 +66,13 @@ public class insertReservation {
             }
 
             System.out.println("-----------------------------------------------------");
-            //print out change price table and also default price for the other time period
-            ResultSet changeprice = st.executeQuery("SELECT * FROM changeprice WHERE lid= '" + lid1 + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) ");
+            ResultSet changeprice = st.executeQuery("SELECT * FROM changeprice WHERE lid= '" + lid1 +
+                            "' AND (('" + start_date1 + "' <= start_date AND '" + end_date1
+                    + "' > start_date) OR ('" + start_date1 + "' < end_date AND '" + end_date1 + "' >= end_date) OR ('" + start_date1
+                    + "' >= start_date AND '" + end_date1 + "' <= end_date))");
             System.out.println("lid \tstart_date \tend_date \tprice");
             while (changeprice.next()) {
-                System.out.println(listlist.getInt(1) + " " + listlist.getInt(2) + " " + listlist.getInt(3) + " " + listlist.getInt(4));
+                System.out.println(changeprice.getInt(1) + " " + changeprice.getInt(2) + " " + changeprice.getInt(3) + " " + changeprice.getInt(4));
             }
 
             ResultSet defaultprice = st.executeQuery("SELECT default_price FROM lists WHERE lid= '" + lid1 + "' ");
@@ -66,29 +80,20 @@ public class insertReservation {
             System.out.println("All other time period beside above time period are set to default price of " + defaultprice.getInt(1));
             System.out.println("-----------------------------------------------------");
 
-            ResultSet isHost = st.executeQuery("SELECT * FROM owns WHERE lid= '" + lid1 + "' AND uid= '" + hostid1 + "'");
-            if (!isHost.next()) {
-                System.out.println("The host listing combination you entered is invalid!");
-                return;
-            }
-
-            ResultSet isUser1 = st.executeQuery("SELECT * FROM users WHERE sin= '" + hostid1 + "' AND status=1");
-            if (!isUser1.next()) {
-                System.out.println("Such host does not exist");
-                return;
-            }
 
             ResultSet isConflictrenter = st.executeQuery("SELECT * FROM reservations WHERE renterid= '"
-                    + renterid1 + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1
-                    + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) AND status = 1");
+                    + renterid1 + "' AND (('" + start_date1 + "' <= start_date AND '" + end_date1
+                    + "' > start_date) OR ('" + start_date1 + "' < end_date AND '" + end_date1 + "' >= end_date) OR ('" + start_date1
+                    + "' >= start_date AND '" + end_date1 + "' <= end_date) ) AND status = 1");
             if (isConflictrenter.next()) {
                 System.out.println("There is a conflict with your current reservation!");
                 return;
             }
 
             ResultSet isConflictlist = st.executeQuery("SELECT * FROM reservations WHERE lid= '" + lid1
-                    + "' AND (('" + start_date1 + "' < end_date AND '" + start_date1 + "' >= start_date) OR ('" + end_date1 + "' <= end_date AND '" + end_date1 + "' > start_date)) AND status = 1");
-
+                    + "' AND (('" + start_date1 + "' <= start_date AND '" + end_date1
+                    + "' > start_date) OR ('" + start_date1 + "' < end_date AND '" + end_date1 + "' >= end_date) OR ('" + start_date1
+                    + "' >= start_date AND '" + end_date1 + "' <= end_date) ) AND status = 1");
             if (isConflictlist.next()) {
                 System.out.println("There is a conflict with listing's reservation!");
                 return;
@@ -109,6 +114,8 @@ public class insertReservation {
 
                     if (isupdated != 1) {
                         System.out.println("Failed to add back cancelled reservation");
+                    }else {
+                        System.out.println("This reservation has been successfully insert.");
                     }
                     return;
                 } else {
@@ -118,6 +125,7 @@ public class insertReservation {
             } else {
                 st.executeUpdate("INSERT INTO reservations " +
                         "VALUES ('" + hostid1 + "','" + renterid1 + "', '" + lid1 + "', '" + start_date1 + "','" + end_date1 + "', 1,NULL, 3, NULL, 3, NULL)");
+                System.out.println("This reservation has been successfully insert.");
             }
             conn.close();
         } catch (Exception e) {
