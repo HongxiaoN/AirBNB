@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class totalListingsRankHost {
+public class rankTotalListingsHost {
     public static void main(String[] args) {
 
         System.out.println("-----------------------------------------------------");
@@ -40,7 +40,7 @@ public class totalListingsRankHost {
             } else {
                 ResultSet resultSet = st.executeQuery("SELECT lists.country, lists.city, owns.uid, COUNT(lists.lid) FROM lists " +
                         "INNER JOIN owns ON owns.lid=lists.lid WHERE lists.status=1 " +
-                        "GROUP BY lists.country, owns.uid ORDER BY lists.country, lists.city, owns.uid, COUNT(lists.lid) DESC");
+                        "GROUP BY lists.country, lists.city, owns.uid ORDER BY lists.country, lists.city, owns.uid, COUNT(lists.lid) DESC");
 
                 System.out.println("Country\t\t City \t\t Host ID \t\t Number of Listings");
                 while (resultSet.next()) {

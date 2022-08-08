@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class renterListingsbyDateLocation {
+public class rankRenterListingsbyDateLocation {
     public static void main(String[] args) {
 
         System.out.println("-----------------------------------------------------");
@@ -38,30 +38,26 @@ public class renterListingsbyDateLocation {
             if (option == 'A') {
                 ResultSet resultSet = st.executeQuery("SELECT reservations.renterid, COUNT(reservations.lid) " +
                         "FROM reservations INNER JOIN users ON reservations.renterid = users.sin " +
-                        "WHERE start_date > '"+start_date+"' AND end_date < '"+end_date+"' AND users.status=1 " +
+                        "WHERE start_date > '" + start_date + "' AND end_date < '" + end_date + "' AND users.status=1 " +
                         "GROUP BY reservations.renterid ORDER BY COUNT(reservations.lid) DESC");
 
 
-                System.out.println("Postal Code\t Number of Bookings");
-                while (resultSet.next()){
+                System.out.println("Renter ID\t Number of Bookings");
+                while (resultSet.next()) {
                     System.out.println(resultSet.getInt(1) + "\t\t\t " + resultSet.getInt(2));
                 }
 
-
-
-
-
-
-
-
             } else if (option == 'B') {
 
+                ResultSet resultSet = st.executeQuery("SELECT reservations.renterid, lists.city, COUNT(reservations.lid) " +
+                        "FROM reservations INNER JOIN users ON reservations.renterid = users.sin INNER JOIN lists ON reservations.lid = lists.lid " +
+                        "WHERE reservations.start_date > '" + start_date + "' AND reservations.end_date < '" + end_date + "' AND users.status=1 " +
+                        "GROUP BY reservations.renterid, lists.city HAVING COUNT(reservations.lid) >= 2 ORDER BY COUNT(reservations.lid) DESC");
 
-
-
-
-
-
+                System.out.println("Renter ID \t City \t Number of Bookings");
+                while (resultSet.next()) {
+                    System.out.println(resultSet.getInt(1) + "\t\t\t " + resultSet.getString(2) + "\t\t" + resultSet.getInt(3));
+                }
 
             }
 
@@ -70,7 +66,6 @@ public class renterListingsbyDateLocation {
             System.err.println("Got an exception! ");
             System.err.println(e.getMessage());
         }
-
 
     }
 }
