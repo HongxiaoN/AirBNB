@@ -79,7 +79,7 @@ public class advFindListByLatitude {
             }
             System.out.println("Please enter the end date,  It should in the range of 20220101 - 20230101");
             int end_date = inputTime.nextInt();
-            if (end_date < 20220101 || start_date >= end_date || end_date >20230101) {
+            if (end_date < 20220101 || start_date >= end_date || end_date > 20230101) {
                 System.out.println("Such end date is invalid!");
                 return;
             }
@@ -90,7 +90,11 @@ public class advFindListByLatitude {
 
             if (rank.equals("D") && SortBY.equals("A")) {
                 ResultSet resultSet = st.executeQuery("SELECT *, SQRT( POW((L.longitude - '" + longitude
-                        + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
+                        + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance FROM lists AS L " +
+                        "WHERE L.status = 1 AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 " +
+                        " AND (('" + start_date + "' <= start_date AND '" + end_date
+                        + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                        + "' >= start_date AND '" + end_date + "' <= end_date))) HAVING distance < '"
                         + distance + "' Order by distance ASC");
                 System.out.println("-----------------------------------------------------");
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
@@ -112,7 +116,11 @@ public class advFindListByLatitude {
                 System.out.println("-----------------------------------------------------\n");
             } else if (rank.equals("D") && SortBY.equals("D")) {
                 ResultSet resultSet = st.executeQuery("SELECT *, SQRT( POW((L.longitude - '" + longitude
-                        + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance FROM lists AS L WHERE L.status = 1 HAVING distance < '"
+                        + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance FROM lists AS L " +
+                        "WHERE L.status = 1 AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 " +
+                        " AND (('" + start_date + "' <= start_date AND '" + end_date
+                        + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                        + "' >= start_date AND '" + end_date + "' <= end_date))) HAVING distance < '"
                         + distance + "' Order by distance DESC");
                 System.out.println("-----------------------------------------------------");
                 System.out.println("lid \thouse_type \tdistance \tlatitude \tlongitude \troomid \taddress \tpostal_code \tcity \t\tcountry " +
@@ -138,8 +146,11 @@ public class advFindListByLatitude {
                                 "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
                                 "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, C1.price AS NEW " +
                                 "FROM lists AS L JOIN changeprice AS C1 ON L.lid = C1.lid " +
-                                "WHERE L.status = 1 AND C1.start_date <= 20220101 AND C1.end_date >= 20220102 AND EXISTS" +
-                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid =L.lid)" +
+                                "WHERE L.status = 1 AND C1.start_date <= '" + start_date + "' AND C1.end_date >= '" + start_date + "' AND EXISTS" +
+                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= '" + start_date + "' && C.end_date >= '" + start_date + "' AND C.lid =L.lid) AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 " +
+                                " AND (('" + start_date + "' <= start_date AND '" + end_date
+                                + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                                + "' >= start_date AND '" + end_date + "' <= end_date))) " +
                                 "HAVING distance < '" + distance + "') UNION " +
                                 "(SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
@@ -147,7 +158,10 @@ public class advFindListByLatitude {
                                 "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, L.default_price AS NEW " +
                                 "FROM lists AS L " +
                                 "WHERE L.status = 1 AND NOT EXISTS " +
-                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid = L.lid)" +
+                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= '" + start_date + "' && C.end_date >= '" + start_date + "' AND C.lid = L.lid) AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 " +
+                                " AND (('" + start_date + "' <= start_date AND '" + end_date
+                                + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                                + "' >= start_date AND '" + end_date + "' <= end_date))) " +
                                 "HAVING distance < '" + distance + "')) a ORDER BY NEW ASC");
 
                 System.out.println("-----------------------------------------------------");
@@ -176,8 +190,11 @@ public class advFindListByLatitude {
                                 "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
                                 "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, C1.price AS NEW " +
                                 "FROM lists AS L JOIN changeprice AS C1 ON L.lid = C1.lid " +
-                                "WHERE L.status = 1 AND C1.start_date <= 20220101 AND C1.end_date >= 20220102 AND EXISTS" +
-                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid =L.lid)" +
+                                "WHERE L.status = 1 AND C1.start_date <= '" + start_date + "' AND C1.end_date >= '" + start_date + "' AND EXISTS" +
+                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= '" + start_date + "' && C.end_date >= '" + start_date + "' AND C.lid =L.lid) AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 " +
+                                " AND (('" + start_date + "' <= start_date AND '" + end_date
+                                + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                                + "' >= start_date AND '" + end_date + "' <= end_date))) " +
                                 "HAVING distance < '" + distance + "') UNION " +
                                 "(SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
                                 "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
@@ -185,7 +202,10 @@ public class advFindListByLatitude {
                                 "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, L.default_price AS NEW " +
                                 "FROM lists AS L " +
                                 "WHERE L.status = 1 AND NOT EXISTS " +
-                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220102 AND C.lid = L.lid)" +
+                                " (SELECT * FROM changeprice AS C WHERE C.start_date <= '" + start_date + "' && C.end_date >= '" + start_date + "' AND C.lid = L.lid) AND NOT EXISTS (SELECT * FROM reservations AS R WHERE L.lid = R.lid AND R.status = 1 " +
+                                " AND (('" + start_date + "' <= start_date AND '" + end_date
+                                + "' > start_date) OR ('" + start_date + "' < end_date AND '" + end_date + "' >= end_date) OR ('" + start_date
+                                + "' >= start_date AND '" + end_date + "' <= end_date))) " +
                                 "HAVING distance < '" + distance + "')) a ORDER BY NEW DESC");
 
                 System.out.println("-----------------------------------------------------");
