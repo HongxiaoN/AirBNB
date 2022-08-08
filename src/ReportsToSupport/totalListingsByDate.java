@@ -49,18 +49,14 @@ public class totalListingsByDate {
                     System.out.println(resultSet.getString(1) + "\t\t" + resultSet.getInt(2));
                 }
             } else if (option == 'B') {
-                System.out.println("Please enter the city you want to search for: ");
-                String city = scString.nextLine();
-                city.toLowerCase();
-
-                ResultSet resultSet = st.executeQuery("SELECT lists.postal_code, COUNT(lists.lid) FROM lists INNER JOIN reservations " +
-                        "ON reservations.lid = lists.lid WHERE start_date > '" + start_date + "' AND end_date <  '" + end_date + "' AND city= '" + city + "' " +
-                        "GROUP BY lists.postal_code ");
+                ResultSet resultSet = st.executeQuery("SELECT lists.city, lists.postal_code, COUNT(lists.lid) FROM lists INNER JOIN reservations " +
+                        "ON reservations.lid = lists.lid WHERE start_date > '" + start_date + "' AND end_date <  '" + end_date + "' " +
+                        "GROUP BY lists.city, lists.postal_code ");
 
 
-                System.out.println("Postal Code\t Number of Bookings");
+                System.out.println("City \t Postal Code\t Number of Bookings");
                 while (resultSet.next()){
-                    System.out.println(resultSet.getInt(1) + "\t\t\t " + resultSet.getInt(2));
+                    System.out.println(resultSet.getString(1) + "\t\t" + resultSet.getInt(2) + "\t\t\t " + resultSet.getInt(3));
                 }
 
             }
