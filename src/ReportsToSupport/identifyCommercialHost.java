@@ -32,7 +32,7 @@ public class identifyCommercialHost {
             System.out.println("The following hosts are considered to be flagged since their number of listings are greater than flag value: " + flag);
 
             ResultSet resultSet = st.executeQuery("SELECT owns.uid, COUNT(lists.lid) FROM lists " +
-                    "INNER JOIN owns ON owns.lid=lists.lid WHERE lists.status=1 " +
+                    "INNER JOIN owns ON owns.lid=lists.lid INNER JOIN users ON users.sin = owns.uid WHERE lists.status=1 AND users.status = 1 " +
                     "GROUP BY lists.country, lists.city, owns.uid HAVING COUNT(lists.lid) > '" + flag + "' ORDER BY lists.country, lists.city, owns.uid, COUNT(lists.lid) DESC");
 
             System.out.println("Host ID  Number of Listings");
