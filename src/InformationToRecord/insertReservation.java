@@ -43,8 +43,16 @@ public class insertReservation {
                 return;
             }
 
-            System.out.println("Please enter your SIN number: ");
+            System.out.println("Please enter renterid SIN number: ");
             int renterid1 = scInt.nextInt();
+            ResultSet isRenter = st.executeQuery("SELECT * FROM users WHERE sin= '" + renterid1 + "' AND status=1");
+            if (!isRenter.next()) {
+                System.out.println("You need to sign up for an account in order to proceed");
+                return;
+            }
+
+            System.out.println("Please enter YOU SIN number: ");
+            int userid = scInt.nextInt();
             ResultSet isUser = st.executeQuery("SELECT * FROM users WHERE sin= '" + renterid1 + "' AND status=1");
             if (!isUser.next()) {
                 System.out.println("You need to sign up for an account in order to proceed");
@@ -106,7 +114,7 @@ public class insertReservation {
             if (isCancelled.next()) {
                 ResultSet iscancelled_by = st.executeQuery("SELECT * FROM reservations WHERE hostid= '" + hostid1 + "' AND renterid= '"
                         + renterid1 + "' AND lid= '" + lid1 + "' AND  start_date= '" + start_date1 + "' AND end_date= '"
-                        + end_date1 + "' AND status=0 AND cancelled_by= '" + renterid1 + "' ");
+                        + end_date1 + "' AND status=0 AND cancelled_by= '" + userid + "' ");
 
                 if (iscancelled_by.next()) {
                     int isupdated = st.executeUpdate("UPDATE reservations SET status=1, cancelled_by = NULL WHERE hostid= '" + hostid1 + "' AND renterid= '" +
