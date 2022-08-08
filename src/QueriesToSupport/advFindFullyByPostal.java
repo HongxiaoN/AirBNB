@@ -19,7 +19,7 @@ public class advFindFullyByPostal {
             int postal = scInt.nextInt();
 
             if (postal < 0 || postal > 9999) {
-                System.out.println("ERROR: Postal Code should be a four digit number from -9999 to 9999 ");
+                System.out.println("ERROR: Postal Code should be a four digit number from 0 to 9999 ");
                 return;
             }
 
