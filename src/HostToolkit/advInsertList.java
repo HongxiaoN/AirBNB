@@ -1,4 +1,4 @@
-package InformationToRecord;
+package HostToolkit;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,15 +6,15 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class insertListing {
+public class advInsertList {
     public static void main(String[] args) {
         System.out.println("-----------------------------------------------------");
         System.out.println("Welcome to AirBNB.");
-        System.out.println("This createListing function is for insert a new listing for a host(user)" +
+        System.out.println("This ADVANCE function is for insert a new listing for a host(user) AND suggest the price and amenities." +
                 "with checking input validation");
         System.out.println("-----------------------------------------------------\n");
 
-        System.out.println("You will create a new listing");
+        System.out.println("You will ADVANCE create a new listing");
         System.out.println("At first, what is your sin? It should be 9 digit number!");
         Scanner input_sin = new Scanner(System.in);    //System.in is a standard input stream
         int sin = input_sin.nextInt();
@@ -125,6 +125,7 @@ public class insertListing {
             // At here, mean this is a new list not in the table before.
             System.out.println("For those amenities, if you list have it, enter '1'. Otherwise, enter '0'.");
             System.out.println("Does this list's bathroom have hair dryer?  [0/1]");
+            System.out.println("I suggest you should have it, it may increase you price.");
             Scanner input_bathroom_hair_dryer = new Scanner(System.in);
             int bathroom_hair_dryer = input_bathroom_hair_dryer.nextInt();
             if (bathroom_hair_dryer != 0 && bathroom_hair_dryer != 1) {
@@ -132,7 +133,8 @@ public class insertListing {
                 return;
             }
 
-            System.out.println("Does this list's bathroom have bathroom_cleaning_products?  [0/1]");
+            System.out.println("Does this list's bathroom have bathroom_cleaning_products?  [0/1] ");
+            System.out.println("I suggest you should have it, it may increase you price.");
             Scanner input_bathroom_cleaning_products = new Scanner(System.in);
             int bathroom_cleaning_products = input_bathroom_cleaning_products.nextInt();
             if (bathroom_cleaning_products != 0 && bathroom_cleaning_products != 1) {
@@ -141,6 +143,7 @@ public class insertListing {
             }
 
             System.out.println("Does this list's bedroom have bedroom_essentials?  [0/1]");
+            System.out.println("I suggest you should have it, it may increase you price.");
             Scanner input_bedroom_essentials = new Scanner(System.in);
             int bedroom_essentials = input_bedroom_essentials.nextInt();
             if (bedroom_essentials != 0 && bedroom_essentials != 1) {
@@ -149,6 +152,7 @@ public class insertListing {
             }
 
             System.out.println("Does this list's bedroom have bedroom_hangers?  [0/1]");
+            System.out.println("I suggest you should have it, it may increase you price.");
             Scanner input_bedroom_hangers = new Scanner(System.in);
             int bedroom_hangers = input_bedroom_hangers.nextInt();
             if (bedroom_hangers != 0 && bedroom_hangers != 1) {
@@ -157,6 +161,7 @@ public class insertListing {
             }
 
             System.out.println("Does this list's kitchen have kitchen_dishes?  [0/1]");
+            System.out.println("I suggest you should have it, it may increase you price.");
             Scanner input_kitchen_dishes = new Scanner(System.in);
             int kitchen_dishes = input_kitchen_dishes.nextInt();
             if (kitchen_dishes != 0 && kitchen_dishes != 1) {
@@ -165,6 +170,7 @@ public class insertListing {
             }
 
             System.out.println("Does this list's kitchen have kitchen_fridge?  [0/1]");
+            System.out.println("I suggest you should have it, it may increase you price.");
             Scanner input_kitchen_fridge = new Scanner(System.in);
             int kitchen_fridge = input_kitchen_fridge.nextInt();
             if (kitchen_fridge != 0 && kitchen_fridge != 1) {
@@ -172,6 +178,40 @@ public class insertListing {
                 return;
             }
 
+            // GET a price suggestion, for check 100km from this location, what average price for this type of list, And add $20 for get each more amenities
+            ResultSet resultSet = statement.executeQuery(
+                    "SELECT NEW, house_type FROM((SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
+                            "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
+                            "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
+                            "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, C1.price AS NEW " +
+                            "FROM lists AS L JOIN changeprice AS C1 ON L.lid = C1.lid " +
+                            "WHERE L.status = 1 AND C1.start_date <= 20220101 AND C1.end_date >= 20220101 AND EXISTS" +
+                            " (SELECT * FROM changeprice AS C WHERE C.start_date <= 20220101 && C.end_date >= 20220101 AND C.lid =L.lid) " +
+                            "HAVING distance < 100) UNION " +
+                            "(SELECT L.lid, L.house_type, L.latitude, L.longitude, L.roomid, L.address, L.postal_code, " +
+                            "L.city, L.country, L.bathroom_hair_dryer, L.bathroom_cleaning_products, L.bedroom_essentials, " +
+                            "L.bedroom_hangers, L.kitchen_dishes, L.kitchen_fridge, L.created_at, L.status, " +
+                            "SQRT( POW((L.longitude - '" + longitude + "'), 2) + POW((L.latitude - '" + latitude + "'), 2)) AS distance, L.default_price AS NEW " +
+                            "FROM lists AS L " +
+                            "WHERE L.status = 1 AND NOT EXISTS " +
+                            " (SELECT * FROM changeprice AS C WHERE C.start_date <=  20220101 && C.end_date >= 20220101 AND C.lid = L.lid) " +
+                            "HAVING distance < 100)) a WHERE house_type = '" + type + "'");
+
+            double row = 0;
+            double total = 0;
+            while (resultSet.next()) {
+                total += resultSet.getInt(1);
+                row += 1;
+            }
+            double avgPrice = total / row;
+            System.out.println(avgPrice);
+
+            avgPrice = avgPrice + 20 * (bathroom_hair_dryer + bathroom_cleaning_products + bedroom_essentials +
+                                        bedroom_hangers + kitchen_dishes + kitchen_fridge);
+
+            System.out.println(avgPrice);
+
+            System.out.println("\nThe system find the average price for your list area is " + avgPrice);
             System.out.println("What is the default price for this list?");
             Scanner input_default_price = new Scanner(System.in);
             int default_price = input_default_price.nextInt();
