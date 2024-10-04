@@ -1,4 +1,4 @@
-# Airbnb Data Simulation Project
+# AirBNB 
 
 ## Authors:
 - Hongxiao Niu
